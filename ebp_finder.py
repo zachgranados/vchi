@@ -79,12 +79,40 @@ def collect_provider_info(data_file):
         for span in address_span:
             address = address + span.text + " "
         
+        # div that contains contact info
+        contact_div = div.find("div", class_= "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 sm:gap-x-6 gap-y-1")
+        
+        # contains flexible amount of spans
+        contact_spans = contact_div.find_all('span')
+
+        if len(contact_spans) > 2:
+           # maybe add website if needed 
+            # skips over website if it exists
+            email = contact_spans[1].find('a', class_= "text-vcu_navy font-bold hover:underline overflow-hidden text-ellipsis whitespace-nowrap max-w-fit focus:outline-vcu_navy").text
+
+            # goes to third span if it exists
+            phone_string = contact_spans[2].text
+
+        # if website span does not exist then it goes to the first link and second span
+        else:
+        # finding email addresses
+            email = contact_div.find('a', class_= "text-vcu_navy font-bold hover:underline overflow-hidden text-ellipsis whitespace-nowrap max-w-fit focus:outline-vcu_navy").text
+
+        # goes to second span
+            phone_string = contact_spans[1].text
+
+        
+
+        
+
+
+        
 
         # updates dictionary
         ebp_providers[provider] = {
             "Address" : address.strip(),
-            "EMAIL" : "NULL",
-            "PHONE" : "NULL"
+            "EMAIL" : email,
+            "PHONE" : phone_string
         }
     
     
