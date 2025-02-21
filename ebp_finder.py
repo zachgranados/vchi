@@ -17,6 +17,7 @@ import time
 
 # for scraping 
 from bs4 import BeautifulSoup
+import re
 
 
 def collect_static_html(url):
@@ -100,6 +101,14 @@ def collect_provider_info(data_file):
 
         # goes to second span
             phone_string = contact_spans[1].text
+        
+        # strips phone number
+        match = re.search(r'\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}', phone_string)
+        if match:
+            phone_number = match.group()
+        else:
+            phone_number = "ERROR " + phone_string
+        
 
         
 
@@ -112,7 +121,7 @@ def collect_provider_info(data_file):
         ebp_providers[provider] = {
             "Address" : address.strip(),
             "EMAIL" : email,
-            "PHONE" : phone_string
+            "PHONE" : phone_number
         }
     
     
