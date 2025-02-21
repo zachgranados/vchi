@@ -123,27 +123,11 @@ def collect_provider_info(data_file):
             "EMAIL" : email,
             "PHONE" : phone_number
         }
-    
-    
-    
-
-    print(ebp_providers)
+    return ebp_providers
 
 
 
-
-    # Abigail Brown
-
-    # p, class = font-bold xs:text-xl sm:text-2xl text-gray-900
-
-
-    # About Change 
-
-    #p, class = font-bold xs:text-xl sm:text-2xl text-gray-900
-    return
-
-
-def main():
+def write_html():
     full_webpage = collect_static_html("https://www.ebpfinder.org/")
 
     with open("ebp.txt", "a+") as file:
