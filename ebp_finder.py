@@ -12,6 +12,8 @@ import undetected_chromedriver as uc
 import random
 import time
 
+from bs4 import BeautifulSoup
+
 
 def collect_static_html(url):
 # setups up webdriver to model user interactions
@@ -43,15 +45,63 @@ def collect_static_html(url):
     return driver.page_source
 
 
+def collect_provider_info(data_file):
+
+    ebp_providers = {}
+    # gets html from file
+    with open(data_file, "r", encoding="utf-8") as file:
+        html_content = file.read()
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    provider_divs = soup.find_all('div', class_="flex flex-col pt-[2rem] gap-4")
+
+    for div in provider_divs:
+        provider = div.find("p", class_ = "font-bold xs:text-xl sm:text-2xl text-gray-900").text
+
+        address_div = div.find("div", class_= "grid grid-cols-1 grid-rows-3 grid-flow-row")
+        address = ""
+
+        address_span = address_div.find_all("span")
+
+        for span in address_span:
+            address = address + span.text + " "
+        
+        
+        
+        ebp_providers[provider] = {
+            "Address" : address.strip(),
+            "EMAIL" : "NULL",
+            "PHONE" : "NULL"
+        }
+    
+    
+    
+
+    print(ebp_providers)
 
 
 
-full_webpage = collect_static_html("https://www.ebpfinder.org/")
 
-with open("ebp.txt", "a+") as file:
-    file.write("Full Static Webpage: \n")
-    file.write("\n\n")
-    file.write(full_webpage)
+    # Abigail Brown
+
+    # p, class = font-bold xs:text-xl sm:text-2xl text-gray-900
+
+
+    # About Change 
+
+    #p, class = font-bold xs:text-xl sm:text-2xl text-gray-900
+    return
+
+
+def main():
+    full_webpage = collect_static_html("https://www.ebpfinder.org/")
+
+    with open("ebp.txt", "a+") as file:
+        file.write("Full Static Webpage: \n")
+        file.write("\n\n")
+        file.write(full_webpage)
+
 
 
 
