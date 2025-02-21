@@ -5,23 +5,30 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+
+# trying to fly under radar
+import undetected_chromedriver as uc
+
+import random
 import time
 
 
 def collect_static_html(url):
 # setups up webdriver to model user interactions
+    options = webdriver.ChromeOptions()
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
+
 
 ## using absolute path for right now, should be dynamic path when publishing
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    #service = Service(ChromeDriverManager().install())
+    driver = uc.Chrome(options=options)
 
 # opens and makes request to url
     driver.get(url)
 
 # waits for js to load page
-    #wait = WebDriverWait(driver, 5000)
 
-    time.sleep(5)
+    time.sleep(random.uniform(5, 10))
 
 
     # waits for the first name to appear?
