@@ -14,3 +14,4 @@ setup.create_provider_table(cur, conn)
 
 #inputs into provider table
 setup.input_providers(cur, conn, data)
+
