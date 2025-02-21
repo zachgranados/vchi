@@ -1,22 +1,28 @@
+#webdriver libraries
+
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+#from selenium.webdriver.chrome.service import Service
+#from selenium.webdriver.common.by import By
+#from selenium.webdriver.common.keys import Keys
+#from selenium.webdriver.support.ui import WebDriverWait
+#from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
-# trying to fly under radar
+# helps simulate user behavior, opening banners 
 import undetected_chromedriver as uc
 
+# helps mimic random user interactions
 import random
 import time
 
+# for scraping 
 from bs4 import BeautifulSoup
 
 
 def collect_static_html(url):
-# setups up webdriver to model user interactions
+# setups up webdriver to model user interactions/preferences
+
+#downlaods chrome diver that is up to date with current veresion of chrome
     options = webdriver.ChromeOptions()
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
 
@@ -28,8 +34,7 @@ def collect_static_html(url):
 # opens and makes request to url
     driver.get(url)
 
-# waits for js to load page
-
+# waits for randome interval to let js to load page, mimics user random interactions
     time.sleep(random.uniform(5, 10))
 
 
@@ -52,23 +57,30 @@ def collect_provider_info(data_file):
     with open(data_file, "r", encoding="utf-8") as file:
         html_content = file.read()
 
+    # reads in full file as html_content
     soup = BeautifulSoup(html_content, 'html.parser')
 
+    # finds the divs that contain provider info
     provider_divs = soup.find_all('div', class_="flex flex-col pt-[2rem] gap-4")
 
     for div in provider_divs:
+
+        # p tag that holds name
         provider = div.find("p", class_ = "font-bold xs:text-xl sm:text-2xl text-gray-900").text
 
+        # address div
         address_div = div.find("div", class_= "grid grid-cols-1 grid-rows-3 grid-flow-row")
         address = ""
 
+        # set of spans that contain address info
         address_span = address_div.find_all("span")
 
+        # creates address string
         for span in address_span:
             address = address + span.text + " "
         
-        
-        
+
+        # updates dictionary
         ebp_providers[provider] = {
             "Address" : address.strip(),
             "EMAIL" : "NULL",
