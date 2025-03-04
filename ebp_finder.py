@@ -128,6 +128,7 @@ def collect_provider_info(data_file):
             "WEBSITE": website,
             "SOURCE": "EBP FINDER"
         }
+    #print(ebp_providers)
     return ebp_providers
 
 

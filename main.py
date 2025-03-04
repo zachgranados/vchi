@@ -41,5 +41,5 @@ def export_db_to_excel(db_path, excel_path):
     print(f"Database exported to {excel_path}")
 
 
-export_db_to_excel("bh_directory.db", "test_bh_directory.xlsx")
+#export_db_to_excel("bh_directory.db", "test_bh_directory.xlsx")
 
