@@ -1,11 +1,6 @@
 #webdriver libraries
 
 from selenium import webdriver
-#from selenium.webdriver.chrome.service import Service
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 # helps simulate user behavior, opening banners 
@@ -88,6 +83,7 @@ def collect_provider_info(data_file):
 
         if len(contact_spans) > 2:
            # maybe add website if needed 
+            website = contact_spans[0].find('a').text
             # skips over website if it exists
             email = contact_spans[1].find('a', class_= "text-vcu_navy font-bold hover:underline overflow-hidden text-ellipsis whitespace-nowrap max-w-fit focus:outline-vcu_navy").text
 
@@ -96,6 +92,7 @@ def collect_provider_info(data_file):
 
         # if website span does not exist then it goes to the first link and second span
         else:
+            website = "Not Found"
         # finding email addresses
             email = contact_div.find('a', class_= "text-vcu_navy font-bold hover:underline overflow-hidden text-ellipsis whitespace-nowrap max-w-fit focus:outline-vcu_navy").text
 
@@ -108,20 +105,28 @@ def collect_provider_info(data_file):
             phone_number = match.group()
         else:
             phone_number = "ERROR " + phone_string
+
+        # create zip code
+        zipMatch = re.search('\d{5}',address)
+
+        if match:
+            zip_code = zipMatch.group()
+        else:
+            phone_number = "ERROR"
         
 
         
 
-        
 
-
-        
 
         # updates dictionary
         ebp_providers[provider] = {
-            "Address" : address.strip(),
+            "ADDRESS" : address.strip(),
             "EMAIL" : email,
-            "PHONE" : phone_number
+            "PHONE" : phone_number,
+            "ZIP": zip_code,
+            "WEBSITE": website,
+            "SOURCE": "EBP FINDER"
         }
     return ebp_providers
 

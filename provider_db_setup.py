@@ -14,7 +14,7 @@ def create_db(db_name):
 def create_provider_table(cur, conn):
     # creates a table for all provider names, allows us to track duplicates
     cur.execute(
-        "CREATE TABLE IF NOT EXISTS providers (provider_id INTEGER PRIMARY KEY AUTOINCREMENT, provider_name TEXT UNIQUE, address TEXT UNIQUE, email TEXT UNIQUE, phone TEXT UNIQUE)"
+        "CREATE TABLE IF NOT EXISTS providers (provider_id INTEGER PRIMARY KEY AUTOINCREMENT, provider_name TEXT UNIQUE, address TEXT UNIQUE, zip_code TEXT UNIQUE, website TEXT UNIQUE, email TEXT UNIQUE, phone TEXT UNIQUE, source TEXT UNIQUE)"
     )
     conn.commit()
 
@@ -22,14 +22,19 @@ def input_providers(cur, conn, provider_dict):
     for office in provider_dict:
         cur.execute("SELECT COUNT(*) FROM providers WHERE provider_name = ?", (office,))
         row_count = cur.fetchone()[0]
-
+        
+        # checks for no duplicates
         if row_count != 0:
             continue
         else:
-            address = provider_dict[office]["Address"]
+            address = provider_dict[office]["ADDRESS"]
             email = provider_dict[office]["EMAIL"]
             phone = provider_dict[office]["PHONE"]
-            cur.execute("INSERT OR IGNORE INTO providers (provider_name, address, email, phone) VALUES (?,?,?,?)", (office, address, email, phone))
+            zip_code = provider_dict[office]["ZIP"]
+            website = provider_dict[office]["WEBSITE"]
+            source = provider_dict[office]["SOURCE"]
+
+            cur.execute("INSERT OR IGNORE INTO providers (provider_name, address, zip_code, website, email, phone, source) VALUES (?,?,?,?,?,?,?)", (office, address, zip_code, website, email, phone, source))
     conn.commit()
 
 
